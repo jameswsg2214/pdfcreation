@@ -20,6 +20,7 @@
     import android.graphics.drawable.BitmapDrawable
     import androidx.core.content.res.ResourcesCompat
     import android.graphics.pdf.PdfDocument
+    import androidx.appcompat.content.res.AppCompatResources
     import com.itextpdf.io.font.FontConstants
 
 
@@ -151,12 +152,11 @@
     //        generatePDFNew()
         }
 
-
         @Throws(IOException::class)
         private fun newPdf() {
             val path = Environment.getExternalStoragePublicDirectory(Environment.DIRECTORY_DOWNLOADS)
                 .toString()
-            val file = File(path, "myPdf.pdf")
+            val file = File(path, "myPdfDummyCreation.pdf")
 
             val outputStream: OutputStream = FileOutputStream(file)
             val writer = PdfWriter(file.toString())
@@ -166,34 +166,37 @@
             document.setMargins(120f,40f,90f,40f)
 
             val pageWidth  = pdfDocument.defaultPageSize.width
-            val onePercentageOfWidth  = (pdfDocument.defaultPageSize.width)/10
+            val onePercentageOfWidth  = (pdfDocument.defaultPageSize.width- 80f)/10
 
-            val columnOfFromToDate = floatArrayOf(onePercentageOfWidth,onePercentageOfWidth*3,onePercentageOfWidth*3,onePercentageOfWidth*3)
+            val columnOfFromToDate = floatArrayOf(onePercentageOfWidth,onePercentageOfWidth*2,onePercentageOfWidth*5,onePercentageOfWidth*2)
             val fromToDateTable:Table= Table(columnOfFromToDate).setMarginTop(10f)
 
 
 
 
             fromToDateTable.addCell(Cell(1,1).add(Paragraph("S.No")).setTextAlignment(TextAlignment.CENTER))
-            fromToDateTable.addCell(Cell(2,1).add(Paragraph("Name")).setTextAlignment(TextAlignment.CENTER))
-            fromToDateTable.addCell(Cell(3,1).add(Paragraph("Code")).setTextAlignment(TextAlignment.CENTER))
+            fromToDateTable.addCell(Cell(2,1).add(Paragraph("Code")).setTextAlignment(TextAlignment.CENTER))
+            fromToDateTable.addCell(Cell(3,1).add(Paragraph("Name")).setTextAlignment(TextAlignment.CENTER))
             fromToDateTable.addCell(Cell(4,1).add(Paragraph("Quantity")).setTextAlignment(TextAlignment.CENTER))
-    //        fromToDateTable.addCell(Cell(2,1).add(Paragraph("To date :10-2-2021")).setBorder(Border.NO_BORDER).setTextAlignment(TextAlignment.CENTER))
+            //        fromToDateTable.addCell(Cell(2,1).add(Paragraph("To date :10-2-2021")).setBorder(Border.NO_BORDER).setTextAlignment(TextAlignment.CENTER))
 
             document.add(fromToDateTable)
 
 
 
-            for(i in 1.. 100 ){
+            for(i in 0 .. 100 ){
 
 
-    //            val columnOfFromToDate = floatArrayOf(onePercentageOfWidth,onePercentageOfWidth*3,onePercentageOfWidth*3,onePercentageOfWidth*3)
-                val listTable:Table= Table(columnOfFromToDate)
+                //            val columnOfFromToDate = floatArrayOf(onePercentageOfWidth,onePercentageOfWidth*3,onePercentageOfWidth*3,onePercentageOfWidth*3)
 
-                listTable.addCell(Cell(1,1).add(Paragraph("S.No ${i}")).setTextAlignment(TextAlignment.CENTER))
-                listTable.addCell(Cell(2,1).add(Paragraph("Name ${i}")).setTextAlignment(TextAlignment.CENTER))
-                listTable.addCell(Cell(3,1).add(Paragraph("Code ${i}")).setTextAlignment(TextAlignment.CENTER))
-                listTable.addCell(Cell(4,1).add(Paragraph("Quantity ${i}")).setTextAlignment(TextAlignment.CENTER))
+
+                val columnOf = floatArrayOf(onePercentageOfWidth,onePercentageOfWidth*2,onePercentageOfWidth*5,onePercentageOfWidth*2)
+                val listTable:Table= Table(columnOf)
+
+                listTable.addCell(Cell(1,1).add(Paragraph("${i+1}")).setTextAlignment(TextAlignment.CENTER))
+                listTable.addCell(Cell(2,1).add(Paragraph("${i} Test_code")).setTextAlignment(TextAlignment.CENTER))
+                listTable.addCell(Cell(3,1).add(Paragraph("${i}Test_name")).setTextAlignment(TextAlignment.CENTER))
+                listTable.addCell(Cell(4,1).add(Paragraph("${i} patients_count")).setTextAlignment(TextAlignment.CENTER))
 
 
                 document.add(listTable)
@@ -210,7 +213,7 @@
 
             val path = Environment.getExternalStoragePublicDirectory(Environment.DIRECTORY_DOWNLOADS)
                 .toString()
-            val fileNew = File(path, "myPdf2.pdf")
+            val fileNew = File(path, " dtdt .pdf")
 
             val pdfDoc = com.itextpdf.kernel.pdf.PdfDocument(PdfReader(dest), PdfWriter(fileNew.path))
             val doc = Document(pdfDoc)
@@ -221,7 +224,8 @@
                 val pageWidth= pageSize.width
                 val pageHeight= pageSize.height
 
-                val drawable = getDrawable(R.drawable.tamilnadu_logo)
+                val drawable =
+                    AppCompatResources.getDrawable(this, R.drawable.tamilnadu_logo)
                 val bitmap = (drawable as BitmapDrawable).bitmap
                 val stream = ByteArrayOutputStream()
                 bitmap.compress(Bitmap.CompressFormat.PNG,100,stream)
@@ -229,7 +233,8 @@
                 val imageData = ImageDataFactory.create(bitmapData)
                 val image = Image(imageData)
 
-                val drawable2 = getDrawable(R.drawable.nhm_logo_new_1)
+                val drawable2 =
+                    AppCompatResources.getDrawable(this, R.drawable.nhm_logo_new_1)
                 val bitmap2 = (drawable2 as BitmapDrawable).bitmap
                 val stream2 = ByteArrayOutputStream()
                 bitmap2.compress(Bitmap.CompressFormat.PNG,100,stream2)
@@ -252,7 +257,7 @@
 
                 table.addCell(Cell(1,1).add(image).setBorder(Border.NO_BORDER))
                 table.addCell(Cell(2,1)
-                    .add(Paragraph("Annal Gandhi Memorial Hospital Trichy MCH \n Report"))
+                    .add(Paragraph("Annal Gandhi Memorial Hospital Trichy MCH \n reportType"))
                     .setBorder(Border.NO_BORDER)
                     .setTextAlignment(TextAlignment.CENTER)
                 )
@@ -266,8 +271,8 @@
 
                 fromToDateTable.setFixedPosition(i,25f,pageHeight-110f,pageWidth- 50f)
 
-                fromToDateTable.addCell(Cell(1,1).add(Paragraph("From date :12-2-2010")).setBorder(Border.NO_BORDER).setTextAlignment(TextAlignment.CENTER))
-                fromToDateTable.addCell(Cell(2,1).add(Paragraph("To date :10-2-2021")).setBorder(Border.NO_BORDER).setTextAlignment(TextAlignment.CENTER))
+                fromToDateTable.addCell(Cell(1,1).add(Paragraph("From date : ")).setBorder(Border.NO_BORDER).setTextAlignment(TextAlignment.CENTER))
+                fromToDateTable.addCell(Cell(2,1).add(Paragraph("To date : ")).setBorder(Border.NO_BORDER).setTextAlignment(TextAlignment.CENTER))
                 doc.add(fromToDateTable)
             }
             doc.close()
@@ -283,8 +288,9 @@
             intent.addFlags(Intent.FLAG_GRANT_READ_URI_PERMISSION)
             intent.setDataAndType(uri, "application/pdf")
             startActivity(intent)
-        }
 
+//            fileNew?.let { FileHelper(context).showNotification(it) }
+        }
         private fun generatePDF() {
             // creating an object variable
             // for our PDF document.
