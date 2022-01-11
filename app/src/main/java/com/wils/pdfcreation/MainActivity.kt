@@ -21,13 +21,9 @@
     import androidx.core.content.res.ResourcesCompat
     import android.graphics.pdf.PdfDocument
     import androidx.appcompat.content.res.AppCompatResources
-    import com.itextpdf.io.font.FontConstants
 
 
-    import com.itextpdf.layout.property.VerticalAlignment
     import java.io.*
-    import com.itextpdf.kernel.color.Color
-    import com.itextpdf.kernel.font.PdfFontFactory
     import com.itextpdf.kernel.geom.Rectangle
     import com.itextpdf.kernel.pdf.PdfWriter
     import com.itextpdf.layout.Document
@@ -35,11 +31,13 @@
     import com.itextpdf.layout.property.TextAlignment
     import com.itextpdf.io.image.ImageDataFactory
     import com.itextpdf.io.source.ByteArrayOutputStream
+    import com.itextpdf.kernel.geom.PageSize
     import com.itextpdf.kernel.pdf.PdfReader
     import com.itextpdf.layout.border.Border
     import com.itextpdf.layout.element.Cell
     import com.itextpdf.layout.element.Image
     import com.itextpdf.layout.element.Table
+    import com.itextpdf.layout.property.VerticalAlignment
 
 
     open class MainActivity : AppCompatActivity() {
@@ -148,12 +146,12 @@
             scaledbmp2 = Bitmap.createScaledBitmap(bmp2!!, 130, 120, false);
     //        generatePDF()
 
-            newPdf()
-    //        generatePDFNew()
+//            newPotitartPdf()
+            newLandScapePdf()
         }
 
         @Throws(IOException::class)
-        private fun newPdf() {
+        private fun newPotitartPdf() {
             val path = Environment.getExternalStoragePublicDirectory(Environment.DIRECTORY_DOWNLOADS)
                 .toString()
             val file = File(path, "myPdfDummyCreation.pdf")
@@ -162,6 +160,7 @@
             val writer = PdfWriter(file.toString())
             val pdfDocument = com.itextpdf.kernel.pdf.PdfDocument(writer)
             val document = Document(pdfDocument)
+
 
             document.setMargins(120f,40f,90f,40f)
 
@@ -202,6 +201,107 @@
                 document.add(listTable)
 
             }
+
+            document.close()
+            ManipulatePdf(file.path,file)
+
+        }
+
+
+        private fun newLandScapePdf() {
+            val path = Environment.getExternalStoragePublicDirectory(Environment.DIRECTORY_DOWNLOADS)
+                .toString()
+            val file = File(path, "myPdfDummyCreation.pdf")
+
+            val outputStream: OutputStream = FileOutputStream(file)
+            val writer = PdfWriter(file.toString())
+            val pdfDocument = com.itextpdf.kernel.pdf.PdfDocument(writer)
+            val document = Document(pdfDocument)
+
+            pdfDocument.defaultPageSize = PageSize.A4.rotate()
+
+
+            document.setMargins(120f,10f,90f,10f)
+
+            val pageWidth  = pdfDocument.defaultPageSize.width
+            val onePercentageOfWidth  = (pdfDocument.defaultPageSize.width- 20f)/12
+
+//            val columnOfFromToDate = floatArrayOf(onePercentageOfWidth*1.5f,onePercentageOfWidth*1.5f,onePercentageOfWidth*1f,onePercentageOfWidth*1f,onePercentageOfWidth*1f,onePercentageOfWidth*1f,onePercentageOfWidth*1f,onePercentageOfWidth*1f,onePercentageOfWidth*1f,onePercentageOfWidth/2)
+            val columnOfFromToDate = floatArrayOf(onePercentageOfWidth*2f,onePercentageOfWidth*2f,onePercentageOfWidth,onePercentageOfWidth,onePercentageOfWidth,onePercentageOfWidth,onePercentageOfWidth,onePercentageOfWidth,onePercentageOfWidth,onePercentageOfWidth)
+            val fromToDateTable:Table= Table(columnOfFromToDate).setMarginTop(10f)
+
+            fromToDateTable.addCell(Cell(2,1).add(Paragraph("Doctor Name")).setTextAlignment(TextAlignment.CENTER).setVerticalAlignment(
+                VerticalAlignment.MIDDLE))
+            fromToDateTable.addCell(Cell(2,1).add(Paragraph("Department Name")).setTextAlignment(TextAlignment.CENTER).setVerticalAlignment(
+                VerticalAlignment.MIDDLE))
+            fromToDateTable.addCell(Cell(1,4).add(Paragraph("ADULT")).setTextAlignment(TextAlignment.CENTER))
+            fromToDateTable.addCell(Cell(1,3).add(Paragraph("CHILD")).setTextAlignment(TextAlignment.CENTER))
+            fromToDateTable.addCell(Cell(2,1).add(Paragraph("GRAND TOTAL")).setTextAlignment(TextAlignment.CENTER).setVerticalAlignment(
+                VerticalAlignment.MIDDLE))
+
+            /*
+            fromToDateTable.addCell(Cell(2,1).add(Paragraph("Dc")).setTextAlignment(TextAlignment.CENTER).setVerticalAlignment(
+                VerticalAlignment.MIDDLE))
+            fromToDateTable.addCell(Cell(2,1).add(Paragraph("Dt")).setTextAlignment(TextAlignment.CENTER).setVerticalAlignment(
+                VerticalAlignment.MIDDLE))
+            fromToDateTable.addCell(Cell(1,4).add(Paragraph("A")).setTextAlignment(TextAlignment.CENTER))
+            fromToDateTable.addCell(Cell(1,3).add(Paragraph("C")).setTextAlignment(TextAlignment.CENTER))
+            fromToDateTable.addCell(Cell(2,1).add(Paragraph("G")).setTextAlignment(TextAlignment.CENTER).setVerticalAlignment(
+                VerticalAlignment.MIDDLE))
+*/
+            fromToDateTable.addCell(Cell().add(Paragraph("M")).setTextAlignment(TextAlignment.CENTER))
+            fromToDateTable.addCell(Cell().add(Paragraph("F")).setTextAlignment(TextAlignment.CENTER))
+            fromToDateTable.addCell(Cell().add(Paragraph("TG")).setTextAlignment(TextAlignment.CENTER))
+            fromToDateTable.addCell(Cell().add(Paragraph("TOTAL")).setTextAlignment(TextAlignment.CENTER))
+            fromToDateTable.addCell(Cell().add(Paragraph("M")).setTextAlignment(TextAlignment.CENTER))
+            fromToDateTable.addCell(Cell().add(Paragraph("F")).setTextAlignment(TextAlignment.CENTER))
+            fromToDateTable.addCell(Cell().add(Paragraph("TOTAL")).setTextAlignment(TextAlignment.CENTER))
+
+            document.add(fromToDateTable)
+
+
+
+            for(i in 0 .. 10 ){
+
+
+                val columnOf = floatArrayOf(onePercentageOfWidth*1.5f,onePercentageOfWidth*1.5f,onePercentageOfWidth*1f,onePercentageOfWidth*1f,onePercentageOfWidth*1f,onePercentageOfWidth*1f,onePercentageOfWidth*1f,onePercentageOfWidth*1f,onePercentageOfWidth*1f,onePercentageOfWidth/2)
+
+
+                val listTable:Table= Table(columnOfFromToDate)
+                listTable.addCell(Cell().add(Paragraph("Dr ${i+1}")).setTextAlignment(TextAlignment.CENTER))
+                listTable.addCell(Cell().add(Paragraph("Department Name SSS ${i+1}")).setTextAlignment(TextAlignment.CENTER))
+                listTable.addCell(Cell().add(Paragraph("1")).setTextAlignment(TextAlignment.CENTER))
+                listTable.addCell(Cell().add(Paragraph("3")).setTextAlignment(TextAlignment.CENTER))
+                listTable.addCell(Cell().add(Paragraph("1")).setTextAlignment(TextAlignment.CENTER))
+                listTable.addCell(Cell().add(Paragraph("5")).setTextAlignment(TextAlignment.CENTER))
+                listTable.addCell(Cell().add(Paragraph("2")).setTextAlignment(TextAlignment.CENTER))
+                listTable.addCell(Cell().add(Paragraph("1")).setTextAlignment(TextAlignment.CENTER))
+                listTable.addCell(Cell().add(Paragraph("3")).setTextAlignment(TextAlignment.CENTER))
+                listTable.addCell(Cell().add(Paragraph("8")).setTextAlignment(TextAlignment.CENTER))
+
+
+                document.add(listTable)
+
+            }
+
+
+            val totalTable:Table= Table(columnOfFromToDate)
+
+            totalTable.addCell(Cell(2,1).add(Paragraph("Total")).setTextAlignment(TextAlignment.CENTER).setVerticalAlignment(
+                VerticalAlignment.MIDDLE))
+
+            totalTable.addCell(Cell().add(Paragraph("")).setTextAlignment(TextAlignment.CENTER).setVerticalAlignment(
+                VerticalAlignment.MIDDLE))
+            totalTable.addCell(Cell().add(Paragraph("100")).setTextAlignment(TextAlignment.CENTER))
+            totalTable.addCell(Cell().add(Paragraph("102")).setTextAlignment(TextAlignment.CENTER))
+            totalTable.addCell(Cell().add(Paragraph("103")).setTextAlignment(TextAlignment.CENTER))
+            totalTable.addCell(Cell().add(Paragraph("104")).setTextAlignment(TextAlignment.CENTER))
+            totalTable.addCell(Cell().add(Paragraph("105")).setTextAlignment(TextAlignment.CENTER))
+            totalTable.addCell(Cell().add(Paragraph("106")).setTextAlignment(TextAlignment.CENTER))
+            totalTable.addCell(Cell().add(Paragraph("107")).setTextAlignment(TextAlignment.CENTER))
+            totalTable.addCell(Cell().add(Paragraph("108")).setTextAlignment(TextAlignment.CENTER))
+
+            document.add(totalTable)
 
             document.close()
             ManipulatePdf(file.path,file)
